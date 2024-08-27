@@ -1,0 +1,162 @@
+from dotenv import load_dotenv
+load_dotenv()
+from pinecone import Pinecone, ServerlessSpec
+import google.generativeai as genai
+import os
+import json
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+pc.delete_index("rag")
+pc.create_index(
+    name="rag",
+    dimension=768,
+    metric="cosine",
+    spec=ServerlessSpec(cloud="aws", region="us-east-1"),
+)
+
+# Load the review data
+data = {
+  "reviews":[
+    {
+      "professor": "Dr. Emily Carter",
+      "subject": "Introduction to Computer Science",
+      "stars": 4,
+      "review": "Professor Carter is an excellent teacher! She explains complex concepts clearly and is always willing to help students."
+    },
+    {
+      "professor": "Prof. David Lee",
+      "subject": "Linear Algebra",
+      "stars": 3,
+      "review": "Prof. Lee knows his stuff, but his lectures can be dry at times. Homework assignments were challenging."
+    },
+    {
+      "professor": "Dr. Sarah Kim",
+      "subject": "Calculus II",
+      "stars": 5,
+      "review": "Dr. Kim is amazing! She makes math fun and is incredibly supportive. Highly recommend!"
+    },
+    {
+      "professor": "Prof. Michael Brown",
+      "subject": "Physics I",
+      "stars": 2,
+      "review": "Prof. Brown's lectures were difficult to follow. The exams were extremely tough."
+    },
+    {
+      "professor": "Dr. Maria Garcia",
+      "subject": "Chemistry",
+      "stars": 4,
+      "review": "Dr. Garcia is passionate about chemistry and makes it engaging. Lab experiments were fun."
+    },
+    {
+      "professor": "Prof. Ethan Johnson",
+      "subject": "Biology",
+      "stars": 3,
+      "review": "Prof. Johnson is knowledgeable but has a monotone teaching style. Textbook was helpful."
+    },
+    {
+      "professor": "Dr. Olivia Taylor",
+      "subject": "Psychology",
+      "stars": 5,
+      "review": "Dr. Taylor is an inspiring professor! Her lectures were thought-provoking and discussions were engaging."
+    },
+    {
+      "professor": "Prof. William Wilson",
+      "subject": "History",
+      "stars": 2,
+      "review": "Prof. Wilson's lectures were boring and repetitive. Exams were mostly memorization-based."
+    },
+    {
+      "professor": "Dr. Ava Patel",
+      "subject": "English Literature",
+      "stars": 4,
+      "review": "Dr. Patel is a great professor! She has a passion for literature and encourages critical thinking."
+    },
+    {
+      "professor": "Prof. Benjamin Davis",
+      "subject": "Philosophy",
+      "stars": 3,
+      "review": "Prof. Davis is intelligent but his lectures can be abstract. Class discussions were interesting."
+    },
+    {
+      "professor": "Dr. Maya Rodriguez",
+      "subject": "Sociology",
+      "stars": 5,
+      "review": "Dr. Rodriguez is an amazing professor! She cares about her students and creates a welcoming classroom environment."
+    },
+    {
+      "professor": "Prof. Noah Miller",
+      "subject": "Economics",
+      "stars": 2,
+      "review": "Prof. Miller's lectures were dry and hard to follow. Textbook was more helpful than class."
+    },
+    {
+      "professor": "Dr. Zoe Hall",
+      "subject": "Political Science",
+      "stars": 4,
+      "review": "Dr. Hall is knowledgeable and passionate about politics. Class discussions were lively."
+    },
+    {
+      "professor": "Prof. Ethan Lee",
+      "subject": "Art History",
+      "stars": 3,
+      "review": "Prof. Lee knows his stuff but his lectures can be boring. Textbook was visually appealing."
+    },
+    {
+      "professor": "Dr. Riley Carter",
+      "subject": "Music Theory",
+      "stars": 5,
+      "review": "Dr. Carter is an inspiring professor! She makes music theory fun and accessible to everyone."
+    },
+    {
+      "professor": "Prof. Sophia Kim",
+      "subject": "Theatre",
+      "stars": 2,
+      "review": "Prof. Kim's class was disorganized and lacked structure. Assignments were unclear."
+    },
+    {
+      "professor": "Dr. Liam Brown",
+      "subject": "Dance",
+      "stars": 4,
+      "review": "Dr. Brown is a passionate and inspiring dance instructor. Class was challenging but rewarding."
+    },
+    {
+      "professor": "Prof. Olivia Garcia",
+      "subject": "Film Studies",
+      "stars": 3,
+      "review": "Prof. Garcia is knowledgeable but her lectures can be dry. Movie screenings were interesting."
+    }
+  ]
+  }
+
+processed_data = []
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel
+
+# Create embeddings for each review
+for review in data["reviews"]:
+    #response = client.embeddings.create(
+        #input=review['review'], model="text-embedding-3-small"
+    #)
+    embedding = model.embed_content([review['review']])[0]
+    processed_data.append(
+        {
+            "values": embedding,
+            "id": review["professor"],
+            "metadata":{
+                "review": review["review"],
+                "subject": review["subject"],
+                "stars": review["stars"],
+            }
+        }
+    )
+
+index = pc.Index("rag")
+upsert_response = index.upsert(
+    vectors=processed_data,
+    namespace="ns1",
+)
+print(f"Upserted count: {upsert_response['upserted_count']}")
+
+# Print index statistics
+print(index.describe_index_stats())
