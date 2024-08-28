@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Rate My Professor
 
-First, run the development server:
+RAG App (Rate-A-Professor) is an innovative platform designed to help students make more informed decisions when selecting their courses by providing AI-driven, unbiased, and accurate ratings of professors. Unlike traditional professor rating websites that rely on manual and often outdated reviews, RAG App utilizes advanced AI technology to analyze student feedback and generate real-time, objective ratings.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+By leveraging the power of the OpenAI API for sentiment analysis, the app interprets the emotional tone and context behind each student review to deliver meaningful insights. This enables the app to provide personalized feedback for professors, highlighting strengths and areas for improvement, which can ultimately enhance the overall learning experience.
+## Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- AI-Powered Ratings: Automated ratings based on sentiment analysis, ensuring unbiased and up-to-date evaluations of professors.
+- Personalized Feedback: Tailored insights generated for each professor to help them understand and improve their teaching effectiveness.
+- User-Friendly Interface: A clean and intuitive design that makes it easy for students to search, review, and access professor ratings across various devices.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Technology Stack:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Frontend: Built with Next.js and React for a responsive and dynamic user experience.
+- Backend: Powered by Python, integrating seamlessly with the OpenAI API for AI-driven analysis.
+- Database: Robust data storage using Pinecone to securely manage and store user inputs and AI-generated results.
 
-## Learn More
+## Demo
 
-To learn more about Next.js, take a look at the following resources:
+[Project Presentation Link](https://docs.google.com/presentation/d/1mOhXjKbhTvGzPyUKKwTuoOlCu1Q6fMp0v5lfxp87mGQ/edit?usp=sharing)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[Youtube Demo Link]()
+## Authors
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [@ay4ssin](https://www.github.com/ay4ssin)
+- [@aurelie-neptune](https://www.github.com/aurelie-neptune)
+- [@jessc0123](https://www.github.com/jessc0123)
+- [@mariamauco](https://www.github.com/mariamauco)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
